@@ -4,6 +4,7 @@
             "name": "Win32",
             "includePath": [
                 "${workspaceFolder}/**",
+                "C:/assimp/include",
                 "C:/glad/include",
                 "C:/glm",
                 "C:/glfw/include"

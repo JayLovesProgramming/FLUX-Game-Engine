@@ -4,7 +4,7 @@
     <ClCompile Include="C:\glad\src\glad.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\main.cpp">
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
