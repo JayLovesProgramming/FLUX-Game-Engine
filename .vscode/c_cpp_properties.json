@@ -1,0 +1,14 @@
+{
+    "configurations": [
+        {
+            "name": "Win32",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:/glad/include",
+                "C:/glm",
+                "C:/glfw/include"
+            ]
+        }
+    ],
+    "version": 4
+}
