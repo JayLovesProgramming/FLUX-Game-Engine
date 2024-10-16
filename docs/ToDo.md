@@ -1,0 +1,1 @@
+- Fix the issue with the assimp library [build] LINK : warning LNK4098: defaultlib 'MSVCRT' conflicts with use of other libs; use /NODEFAULTLIB:library [C:\Users\jayxw\Desktop\test\glfw_concept\build\YourProjectName.vcxproj]
