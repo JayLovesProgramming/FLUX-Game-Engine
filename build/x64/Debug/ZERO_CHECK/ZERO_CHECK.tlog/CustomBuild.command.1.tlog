@@ -1,6 +1,6 @@
 ^C:\USERS\JAYXW\DESKTOP\TEST\GLFW_CONCEPT\BUILD\CMAKEFILES\81132B83DF0385CDB9076544620973BA\GENERATE.STAMP.RULE
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/jayxw/Desktop/test/glfw_concept -BC:/Users/jayxw/Desktop/test/glfw_concept/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/jayxw/Desktop/test/glfw_concept/build/YourProjectName.sln
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/jayxw/Desktop/test/glfw_concept -BC:/Users/jayxw/Desktop/test/glfw_concept/build --check-stamp-list CMakeFiles/generate.stamp.list --vs-solution-file C:/Users/jayxw/Desktop/test/glfw_concept/build/FLUXEngine.sln
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

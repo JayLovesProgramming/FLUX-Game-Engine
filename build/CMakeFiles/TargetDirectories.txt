@@ -1,3 +1,3 @@
-C:/Users/jayxw/Desktop/test/glfw_concept/build/CMakeFiles/YourProjectName.dir
+C:/Users/jayxw/Desktop/test/glfw_concept/build/CMakeFiles/FLUXEngine.dir
 C:/Users/jayxw/Desktop/test/glfw_concept/build/CMakeFiles/ALL_BUILD.dir
 C:/Users/jayxw/Desktop/test/glfw_concept/build/CMakeFiles/ZERO_CHECK.dir

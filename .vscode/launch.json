@@ -5,7 +5,7 @@
             "name": "(Windows) Launch",
             "type": "cppvsdbg",
             "request": "launch",
-            "program": "${workspaceFolder}/build/Debug/YourProjectName.exe",
+            "program": "${workspaceFolder}/build/Debug/FLUXEngine.exe",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
