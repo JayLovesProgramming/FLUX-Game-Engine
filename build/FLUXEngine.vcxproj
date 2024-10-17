@@ -322,7 +322,7 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\main.cpp" />
-    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Utils\FrameBufferSizeCallback.cpp" />
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Utils\FrameBufferSize\FrameBufferSizeCallback.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Compiler\ShaderCompiler.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Loader\ShaderLoader.cpp" />
     <ClCompile Include="C:\glad\src\glad.c" />

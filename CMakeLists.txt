@@ -34,7 +34,7 @@ link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR})
 set(GLAD_SRC "C:/glad/src/glad.c")
 
 # /Utils
-file(GLOB UTILS_SOURCES src/Utils/*.cpp)
+file(GLOB_RECURSE UTILS_SOURCES src/Utils/*.cpp)
 # /Shader
 file(GLOB_RECURSE SHADER_SOURCES src/Shader/*.cpp)
 # /Input

@@ -15,8 +15,8 @@
 #include "Input/Mouse/MouseInput.h"
 #include "Input/Keyboard/ProcessInput.h"
 // #include "Input/Gamepad/ControllerInput.h"
-#include "Utils/ShaderPaths.h"
-#include "Utils/FrameBufferSizeCallback.h"
+#include "Utils/Paths/ShaderPaths.h"
+#include "Utils/FrameBufferSize/FrameBufferSizeCallback.h"
 #include "Viewport/Camera/Camera.h"
 
 #include "imgui.h"
@@ -112,8 +112,6 @@ int main()
 
 
         glUseProgram(shaderProgram);
-
-        // Calculate the view matrix
 
         // Set the uniform for projection and view matrices
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));

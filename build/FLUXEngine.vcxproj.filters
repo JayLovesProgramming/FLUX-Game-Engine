@@ -4,7 +4,7 @@
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Utils\FrameBufferSizeCallback.cpp">
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Utils\FrameBufferSize\FrameBufferSizeCallback.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Compiler\ShaderCompiler.cpp">

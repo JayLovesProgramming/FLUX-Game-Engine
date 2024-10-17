@@ -1,4 +1,6 @@
+// ShaderPaths.h
 #pragma once
+
 #include <string>
 
 // TODO: Change to relative path

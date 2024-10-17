@@ -7,7 +7,6 @@ GLuint CompileShader(const std::string& source, GLenum shaderType) {
     const char* src = source.c_str();
     glShaderSource(shader, 1, &src, nullptr);
     glCompileShader(shader);
-
     GLint isSuccess;
     glGetShaderiv(shader, GL_COMPILE_STATUS, &isSuccess);
     if (!isSuccess) {

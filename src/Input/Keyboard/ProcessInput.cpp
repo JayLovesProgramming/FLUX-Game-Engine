@@ -1,6 +1,6 @@
 // ProcessInput.cpp
-#include "ProcessInput.h"
 // TODO: Make relative path
+#include "ProcessInput.h"
 #include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Gamepad\ControllerInput.h"
 #include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Config\Config.h"
 #include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.h" // Include to use getCameraFront()

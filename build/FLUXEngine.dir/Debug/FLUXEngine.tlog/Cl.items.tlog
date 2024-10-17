@@ -1,5 +1,5 @@
 C:\Users\jayxw\Desktop\test\glfw_concept\src\main.cpp;C:\Users\jayxw\Desktop\test\glfw_concept\build\FLUXEngine.dir\Debug\main.obj
-C:\Users\jayxw\Desktop\test\glfw_concept\src\Utils\FrameBufferSizeCallback.cpp;C:\Users\jayxw\Desktop\test\glfw_concept\build\FLUXEngine.dir\Debug\FrameBufferSizeCallback.obj
+C:\Users\jayxw\Desktop\test\glfw_concept\src\Utils\FrameBufferSize\FrameBufferSizeCallback.cpp;C:\Users\jayxw\Desktop\test\glfw_concept\build\FLUXEngine.dir\Debug\FrameBufferSizeCallback.obj
 C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Compiler\ShaderCompiler.cpp;C:\Users\jayxw\Desktop\test\glfw_concept\build\FLUXEngine.dir\Debug\ShaderCompiler.obj
 C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Loader\ShaderLoader.cpp;C:\Users\jayxw\Desktop\test\glfw_concept\build\FLUXEngine.dir\Debug\ShaderLoader.obj
 C:\glad\src\glad.c;C:\Users\jayxw\Desktop\test\glfw_concept\build\FLUXEngine.dir\Debug\glad.obj
