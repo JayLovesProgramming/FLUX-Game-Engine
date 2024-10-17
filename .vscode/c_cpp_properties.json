@@ -7,7 +7,9 @@
                 "C:/assimp/include",
                 "C:/glad/include",
                 "C:/glm",
-                "C:/glfw/include"
+                "C:/glfw/include",
+                "C:/imgui",
+                "C:/imgui/**"
             ]
         }
     ],

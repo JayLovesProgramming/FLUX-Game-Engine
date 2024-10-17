@@ -1,6 +1,6 @@
 // ShaderCompiler.cpp
-#include "ShaderCompiler.h"
 #include <iostream>
+#include "ShaderCompiler.h"
 
 GLuint CompileShader(const std::string& source, GLenum shaderType) {
     GLuint shader = glCreateShader(shaderType);

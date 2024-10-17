@@ -1,10 +1,13 @@
 // ControllerInput.cpp
 #include "ControllerInput.h"
+// TODO: Make path relative
 #include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.h"
+
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // GLM
 #include <glm/gtc/type_ptr.hpp> // GLM
+
 void processControllerInput(GLFWwindow *window, glm::vec3 &position, float cameraSpeed)
 {
     // Check if a joystick is connected (assuming joystick 0)

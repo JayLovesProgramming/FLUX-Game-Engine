@@ -9,8 +9,8 @@ Engine Features:
     - Audio - Not Started
 
   - Server:
-    - Server component system - Not Started
-    - Networking server - Not Started
+    - Server Component System - Not Started
+    - Networking Backend Server - Not Started
 
   - Shared:
     - Utils - In Progress

@@ -1,0 +1,1 @@
+- Pragma seems to have better runtime
