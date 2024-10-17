@@ -117,7 +117,7 @@
     </Midl>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);C:/imgui;C:/imgui/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -162,7 +162,7 @@
     </Midl>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);C:/imgui;C:/imgui/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -207,7 +207,7 @@
     </Midl>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);C:/imgui;C:/imgui/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -251,7 +251,7 @@
     </Midl>
     <Link>
       <AdditionalDependencies>glfw3.lib;opengl32.lib;assimp-vc143-mt.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;comdlg32.lib;advapi32.lib</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:/glfw/lib-vc2022;C:/glfw/lib-vc2022/$(Configuration);C:/Program Files/Assimp/lib/x64;C:/Program Files/Assimp/lib/x64/$(Configuration);C:/imgui;C:/imgui/$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalOptions>%(AdditionalOptions) /machine:x64</AdditionalOptions>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <IgnoreSpecificDefaultLibraries>%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -331,6 +331,17 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Gamepad\ControllerInput.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Config\Config.cpp" />
+    <ClInclude Include="C:\imgui\imconfig.h" />
+    <ClCompile Include="C:\imgui\imgui.cpp" />
+    <ClInclude Include="C:\imgui\imgui.h" />
+    <ClCompile Include="C:\imgui\imgui_demo.cpp" />
+    <ClCompile Include="C:\imgui\imgui_draw.cpp" />
+    <ClInclude Include="C:\imgui\imgui_internal.h" />
+    <ClCompile Include="C:\imgui\imgui_tables.cpp" />
+    <ClCompile Include="C:\imgui\imgui_widgets.cpp" />
+    <ClInclude Include="C:\imgui\imstb_rectpack.h" />
+    <ClInclude Include="C:\imgui\imstb_textedit.h" />
+    <ClInclude Include="C:\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\jayxw\Desktop\test\glfw_concept\build\ZERO_CHECK.vcxproj">

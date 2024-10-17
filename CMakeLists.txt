@@ -15,11 +15,13 @@ set(GLM_INCLUDE_DIR "C:/glm")
 set(ASSIMP_INCLUDE_DIR "C:/Program Files/Assimp/include")
 set(ASSIMP_LIBRARY_DIR "C:/Program Files/Assimp/lib/x64")
 
+set(IMGUI_LIBRARY_DIR "C:/imgui")
+
 # Include directories
 include_directories(${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} "src")
 
 # Link directories
-link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR})
+link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR} ${IMGUI_LIBRARY_DIR})
 
 set(GLAD_SRC "C:/glad/src/glad.c")
 
@@ -35,11 +37,13 @@ file(GLOB_RECURSE INPUT_GAMEPAD_SOURCES src/Input/Gamepad/*.cpp)
 file(GLOB_RECURSE VIEWPORT_SOURCES src/Viewport/*.cpp)
 # /Config
 file(GLOB_RECURSE CONFIG_SOURCES src/Config/*.cpp)
+# ImGUI
+file(GLOB IMGUI_SRC "C:/imgui/*.cpp" "C:/imgui/*.h")
 
-add_executable(${PROJECT_NAME} src/main.cpp ${GLAD_SRC} ${UTILS_SOURCES} ${SHADER_SOURCES} ${INPUT_KEYBOARD_SOURCES} ${INPUT_MOUSE_SOURCES} ${INPUT_GAMEPAD_SOURCES} ${VIEWPORT_SOURCES} ${CONFIG_SOURCES})
+add_executable(${PROJECT_NAME} src/main.cpp ${GLAD_SRC}  ${UTILS_SOURCES} ${SHADER_SOURCES} ${INPUT_KEYBOARD_SOURCES} ${INPUT_MOUSE_SOURCES} ${INPUT_GAMEPAD_SOURCES} ${VIEWPORT_SOURCES} ${CONFIG_SOURCES} ${IMGUI_SRC})
 
 # Set runtime library
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")  # Use /MD for Release, /MDd for Debug
 
 # Link against GLFW, OpenGL, and Assimp
-target_link_libraries(${PROJECT_NAME} glfw3 opengl32 assimp-vc143-mt)
+target_link_libraries(${PROJECT_NAME} glfw3 opengl32 assimp-vc143-mt )
