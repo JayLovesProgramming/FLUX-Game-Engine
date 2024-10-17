@@ -1,6 +1,6 @@
-^C:\USERS\JAYXW\DESKTOP\TEST\GLFW_CONCEPT\CMAKELISTS.TXT
+^C:\USERS\JAYXW\DESKTOP\TEST\FLUX\CMAKELISTS.TXT
 setlocal
-"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/jayxw/Desktop/test/glfw_concept -BC:/Users/jayxw/Desktop/test/glfw_concept/build --check-stamp-file C:/Users/jayxw/Desktop/test/glfw_concept/build/CMakeFiles/generate.stamp
+"C:\Program Files\CMake\bin\cmake.exe" -SC:/Users/jayxw/Desktop/test/FLUX -BC:/Users/jayxw/Desktop/test/FLUX/build --check-stamp-file C:/Users/jayxw/Desktop/test/FLUX/build/CMakeFiles/generate.stamp
 if %errorlevel% neq 0 goto :cmEnd
 :cmEnd
 endlocal & call :cmErrorLevel %errorlevel% & goto :cmDone

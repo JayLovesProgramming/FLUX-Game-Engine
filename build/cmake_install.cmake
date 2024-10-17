@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/jayxw/Desktop/test/glfw_concept
+# Install script for directory: C:/Users/jayxw/Desktop/test/FLUX
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files/MyCppProject")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/FLUXEngine")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -40,5 +40,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/jayxw/Desktop/test/glfw_concept/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/jayxw/Desktop/test/FLUX/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

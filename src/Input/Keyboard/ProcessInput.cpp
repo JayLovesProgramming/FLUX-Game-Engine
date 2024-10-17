@@ -1,9 +1,9 @@
 // ProcessInput.cpp
 // TODO: Make relative path
 #include "ProcessInput.h"
-#include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Gamepad\ControllerInput.h"
-#include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Config\Config.h"
-#include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.h" // Include to use getCameraFront()
+#include "C:\Users\jayxw\Desktop\test\FLUX\src\Input\Gamepad\ControllerInput.h"
+#include "C:\Users\jayxw\Desktop\test\FLUX\src\Config\Config.h"
+#include "C:\Users\jayxw\Desktop\test\FLUX\src\Viewport\Camera\Camera.h" // Include to use getCameraFront()
 
 void processInput(GLFWwindow *window, glm::vec3 &position)
 {
