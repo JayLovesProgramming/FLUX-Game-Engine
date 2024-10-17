@@ -1,6 +1,6 @@
 #include <iostream>
 // GLAD
-#include <glad/glad.h> 
+#include <glad/glad.h>
 // GLFW
 #include <GLFW/glfw3.h>
 // GLM
@@ -11,87 +11,44 @@
 #include <sstream>
 #include <fstream>
 
+#include "Shader/Compiler/ShaderCompiler.h"
+#include "Shader/Loader/ShaderLoader.h"
+#include "Input/Mouse/MouseInput.h"
+
+#include "Utils/ShaderPaths.h"
+
 // Window Size Constants
 const unsigned int WIDTH = 1920;
 const unsigned int HEIGHT = 1080;
 
 bool fullscreen = false;
-bool firstMouse = true; // Used to detect the first mouse movement
-float lastX = WIDTH / 2.0f; // Initial mouse X
-float lastY = HEIGHT / 2.0f;  // Initial mouse Y
-float yaw = -90.0f; // Yaw is initialized to this value
-float pitch = 0.0f; // Pitch is initialized to this value
+
+extern bool firstMouse; // Used to detect the first mouse movement
+extern float lastX;     // Initial mouse X
+extern float lastY;     // Initial mouse Y
+extern float yaw;       // Yaw is initialized to this value
+extern float pitch;     // Pitch is initialized to this value
+
 float cameraSpeed = 0.05f; // Speed of the camera movement
 
 // Vertex data (coordinates and texture coordinates)
 float vertices[] = {
     // Positions        // Texture Coords
-    -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, // Bottom-left
-     0.5f, -0.5f, 0.0f,  1.0f, 0.0f, // Bottom-right
-     0.5f,  0.5f, 0.0f,  1.0f, 1.0f, // Top-right
-    -0.5f, -0.5f, 0.0f,  0.0f, 0.0f, // Bottom-left
-     0.5f,  0.5f, 0.0f,  1.0f, 1.0f, // Top-right
-    -0.5f,  0.5f, 0.0f,  0.0f, 1.0f  // Top-left
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
+    0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Bottom-right
+    0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
+    0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
+    -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // Top-left
 };
 
-void framebuffer_size_callback(GLFWwindow * window, int width, int height) {
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
     glViewport(0, 0, width, height);
 }
 
-std::string LoadShader(const std::string& filePath) {
-    std::ifstream file(filePath);
-    std::stringstream buffer;
-
-    if (file.is_open()) {
-        buffer << file.rdbuf();
-        file.close();
-    } else {
-        std::cerr << "ERROR: Could not open shader file: " << filePath << std::endl;
-    }
-    return buffer.str();
-}
-
-GLuint CompileShader(const std::string& source, GLenum shaderType) {
-    GLuint shader = glCreateShader(shaderType);
-    const char* src = source.c_str();
-    glShaderSource(shader, 1, &src, nullptr);
-    glCompileShader(shader);
-
-    GLint isSuccess;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &isSuccess);
-    if (!isSuccess) {
-        char infoLog[512];
-        glGetShaderInfoLog(shader, 512, nullptr, infoLog);
-        std::cerr << "ERROR: Shader compilation error: " << infoLog << std::endl;
-    }
-    return shader;
-}
-
-void mouse_callback(GLFWwindow* window, double xpos, double ypos) {
-    if (firstMouse) {
-        lastX = static_cast<float>(xpos);
-        lastY = static_cast<float>(ypos);
-        firstMouse = false; // Do this only once
-    }
-
-    float xoffset = static_cast<float>(xpos) - lastX; // Calculate the offset
-    float yoffset = lastY - static_cast<float>(ypos); // Invert y offset because the screen y-axis is inverted
-    lastX = static_cast<float>(xpos);
-    lastY = static_cast<float>(ypos);
-    
-    const float sensitivity = 0.1f; // Adjust mouse sensitivity
-    xoffset *= sensitivity;
-    yoffset *= sensitivity;
-    
-    yaw += xoffset; // Update yaw
-    pitch += yoffset; // Update pitch
-    
-    // Constrain pitch
-    if (pitch > 89.0f) pitch = 89.0f;
-    if (pitch < -89.0f) pitch = -89.0f;
-}
-
-glm::vec3 getCameraFront() {
+glm::vec3 getCameraFront()
+{
     glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
@@ -99,29 +56,37 @@ glm::vec3 getCameraFront() {
     return glm::normalize(front);
 }
 
-void processInput(GLFWwindow *window, glm::vec3 &position) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
+void processInput(GLFWwindow *window, glm::vec3 &position)
+{
+    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
+    {
         glfwSetWindowShouldClose(window, true);
     }
 
     glm::vec3 front = getCameraFront();
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
         position += front * cameraSpeed; // Move forward
     }
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
         position -= front * cameraSpeed; // Move backward
     }
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
         position -= glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f))) * cameraSpeed; // Move left
     }
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
         position += glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f))) * cameraSpeed; // Move right
     }
 }
 
-int main() {
+int main()
+{
     // Init GLFW
-    if (!glfwInit()) {
+    if (!glfwInit())
+    {
         std::cerr << "ERROR: Failed to init GLFW" << std::endl;
         return -1;
     }
@@ -133,20 +98,22 @@ int main() {
 
     GLFWmonitor *monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
     GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "FLUX Game Engine (Alpha Build 0.1)", monitor, nullptr);
-    if (!window) {
+    if (!window)
+    {
         std::cerr << "ERROR: Failed to create the GLFW window" << std::endl;
         glfwTerminate();
         return -1;
     }
-    
+
     glfwMakeContextCurrent(window);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    
+
     // Register mouse callback
     glfwSetCursorPosCallback(window, mouse_callback);
 
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
         std::cerr << "ERROR: Failed to initialize GLAD" << std::endl;
         glfwTerminate();
         return -1;
@@ -155,12 +122,12 @@ int main() {
     glEnable(GL_DEPTH_TEST); // Enable depth testing
 
     // Load and compile shaders
-    std::string vertexShaderSource = LoadShader("shaders/vertexShader.glsl");
-    std::string fragmentShaderSource = LoadShader("shaders/fragmentShader.glsl");
+    std::string vertexShaderSource = LoadShader(SHADER_DIR + "vertexShader.glsl");
+    std::string fragmentShaderSource = LoadShader(SHADER_DIR + "fragmentShader.glsl");
 
     GLuint vertexShader = CompileShader(vertexShaderSource, GL_VERTEX_SHADER);
     GLuint fragmentShader = CompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-    
+
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
@@ -177,17 +144,18 @@ int main() {
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBindVertexArray(VAO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
 
     // Projection matrix
     glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-    
+
     // Main Render Loop
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f); // Initial camera position
 
-    while (!glfwWindowShouldClose(window)) {
+    while (!glfwWindowShouldClose(window))
+    {
         processInput(window, cameraPos); // Process input
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);

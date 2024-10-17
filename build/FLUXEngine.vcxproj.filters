@@ -7,6 +7,15 @@
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Loader\ShaderLoader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Compiler\ShaderCompiler.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Mouse\MouseInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="C:\Users\jayxw\Desktop\test\glfw_concept\CMakeLists.txt" />

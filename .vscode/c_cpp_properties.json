@@ -3,7 +3,7 @@
         {
             "name": "Win32",
             "includePath": [
-                "${workspaceFolder}/**",
+                // "${workspaceFolder}/**",
                 "C:/assimp/include",
                 "C:/glad/include",
                 "C:/glm",

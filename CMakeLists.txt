@@ -16,13 +16,13 @@ set(ASSIMP_INCLUDE_DIR "C:/Program Files/Assimp/include")
 set(ASSIMP_LIBRARY_DIR "C:/Program Files/Assimp/lib/x64")
 
 # Include directories
-include_directories(${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR})
+include_directories(${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} "src")
 
 # Link directories
 link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR})
 
 # Add your executable and include glad.c
-add_executable(${PROJECT_NAME} "C:/glad/src/glad.c" src/main.cpp )
+add_executable(${PROJECT_NAME} "C:/glad/src/glad.c" src/main.cpp src/Shader/Loader/ShaderLoader.cpp src/Shader/Compiler/ShaderCompiler.cpp src/Input/Mouse/MouseInput.cpp )
 
 # Set runtime library
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")  # Use /MD for Release, /MDd for Debug

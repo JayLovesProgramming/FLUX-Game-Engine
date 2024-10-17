@@ -63,6 +63,7 @@
         "xutility": "cpp",
         "list": "cpp",
         "unordered_set": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "fstream": "cpp"
     }
 }
