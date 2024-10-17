@@ -28,11 +28,15 @@ file(GLOB UTILS_SOURCES src/Utils/*.cpp)
 # /Shader
 file(GLOB_RECURSE SHADER_SOURCES src/Shader/*.cpp)
 # /Input
-file(GLOB_RECURSE INPUT_SOURCES src/Input/*.cpp)
+file(GLOB_RECURSE INPUT_KEYBOARD_SOURCES src/Input/Keyboard/*.cpp)
+file(GLOB_RECURSE INPUT_MOUSE_SOURCES src/Input/Mouse/*.cpp)
+file(GLOB_RECURSE INPUT_GAMEPAD_SOURCES src/Input/Gamepad/*.cpp)
 # /Viewport
 file(GLOB_RECURSE VIEWPORT_SOURCES src/Viewport/*.cpp)
+# /Config
+file(GLOB_RECURSE CONFIG_SOURCES src/Config/*.cpp)
 
-add_executable(${PROJECT_NAME} src/main.cpp ${GLAD_SRC} ${UTILS_SOURCES} ${SHADER_SOURCES} ${INPUT_SOURCES} ${VIEWPORT_SOURCES})
+add_executable(${PROJECT_NAME} src/main.cpp ${GLAD_SRC} ${UTILS_SOURCES} ${SHADER_SOURCES} ${INPUT_KEYBOARD_SOURCES} ${INPUT_MOUSE_SOURCES} ${INPUT_GAMEPAD_SOURCES} ${VIEWPORT_SOURCES} ${CONFIG_SOURCES})
 
 # Set runtime library
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")  # Use /MD for Release, /MDd for Debug

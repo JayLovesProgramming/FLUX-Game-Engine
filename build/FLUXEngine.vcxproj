@@ -328,7 +328,9 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Loader\ShaderLoader.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Keyboard\ProcessInput.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Mouse\MouseInput.cpp" />
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Gamepad\ControllerInput.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.cpp" />
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Config\Config.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\jayxw\Desktop\test\glfw_concept\build\ZERO_CHECK.vcxproj">

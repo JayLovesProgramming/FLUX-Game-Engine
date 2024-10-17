@@ -22,7 +22,13 @@
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Mouse\MouseInput.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Gamepad\ControllerInput.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Config\Config.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

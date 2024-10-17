@@ -1,61 +1,40 @@
 #include <iostream>
-// GLAD
-#include <glad/glad.h>
-// GLFW
-#include <GLFW/glfw3.h>
-// GLM
-#include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
-#include <glm/gtc/type_ptr.hpp>
 #include <vector>
 #include <sstream>
 #include <fstream>
+#include <array>
+#include <glad/glad.h> // GLAD
+#include <GLFW/glfw3.h> // GLFW
+#include <glm/glm.hpp> // GLM
+#include <glm/gtc/matrix_transform.hpp> // GLM
+#include <glm/gtc/type_ptr.hpp> // GLM
 
+#include "Config/Config.h"
 #include "Shader/Compiler/ShaderCompiler.h"
 #include "Shader/Loader/ShaderLoader.h"
-
 #include "Input/Mouse/MouseInput.h"
 #include "Input/Keyboard/ProcessInput.h"
-
+// #include "Input/Gamepad/ControllerInput.h"
 #include "Utils/ShaderPaths.h"
 #include "Utils/FrameBufferSizeCallback.h"
-
 #include "Viewport/Camera/Camera.h"
 
-// Window Size Constants
-const unsigned int WIDTH = 1920;
-const unsigned int HEIGHT = 1080;
-
-bool fullscreen = false;
-
-extern bool firstMouse; // Used to detect the first mouse movement
-extern float lastX;     // Initial mouse X
-extern float lastY;     // Initial mouse Y
-extern float yaw;       // Yaw is initialized to this value
-extern float pitch;     // Pitch is initialized to this value
-
-float cameraSpeed = 0.05f; // Speed of the camera movement
 
 // Vertex data (coordinates and texture coordinates)
-float vertices[] = {
+const std::array<float, 30> vertices = {
     // Positions        // Texture Coords
     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
-    0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Bottom-right
-    0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
+     0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Bottom-right
+     0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // Top-right
     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
-    0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
-    -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // Top-left
+     0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // Top-right
+    -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // Top-left
 };
-
 
 int main()
 {
     // Init GLFW
-    if (!glfwInit())
-    {
-        std::cerr << "ERROR: Failed to init GLFW" << std::endl;
-        return -1;
-    }
+    assert(glfwInit());
 
     // GLFW Window Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -109,7 +88,7 @@ int main()
 
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBindVertexArray(VAO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
     glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
     glEnableVertexAttribArray(0);
@@ -122,6 +101,7 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
+        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
         processInput(window, cameraPos); // Process input
 
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
@@ -130,7 +110,6 @@ int main()
         glUseProgram(shaderProgram);
 
         // Calculate the view matrix
-        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
 
         // Set the uniform for projection and view matrices
         glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));

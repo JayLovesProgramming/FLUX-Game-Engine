@@ -1,8 +1,8 @@
 #include "ProcessInput.h"
 // TODO: Make relative path
+// #include "ControllerInput.h"
+#include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Config\Config.h"
 #include "C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.h" // Include to use getCameraFront()
-
-extern float cameraSpeed; // Define cameraSpeed if not defined in another file
 
 void processInput(GLFWwindow *window, glm::vec3 &position)
 {
@@ -28,4 +28,6 @@ void processInput(GLFWwindow *window, glm::vec3 &position)
     {
         position += glm::normalize(glm::cross(front, glm::vec3(0.0f, 1.0f, 0.0f))) * cameraSpeed; // Move right
     }
+
+    //  processControllerInput(window, position, cameraSpeed);
 }
