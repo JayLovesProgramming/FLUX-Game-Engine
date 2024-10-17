@@ -21,8 +21,18 @@ include_directories(${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} ${GLM_INCLUDE_DIR} $
 # Link directories
 link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR})
 
-# Add your executable and include glad.c
-add_executable(${PROJECT_NAME} "C:/glad/src/glad.c" src/main.cpp src/Shader/Loader/ShaderLoader.cpp src/Shader/Compiler/ShaderCompiler.cpp src/Input/Mouse/MouseInput.cpp )
+set(GLAD_SRC "C:/glad/src/glad.c")
+
+# /Utils
+file(GLOB UTILS_SOURCES src/Utils/*.cpp)
+# /Shader
+file(GLOB_RECURSE SHADER_SOURCES src/Shader/*.cpp)
+# /Input
+file(GLOB_RECURSE INPUT_SOURCES src/Input/*.cpp)
+# /Viewport
+file(GLOB_RECURSE VIEWPORT_SOURCES src/Viewport/*.cpp)
+
+add_executable(${PROJECT_NAME} src/main.cpp ${GLAD_SRC} ${UTILS_SOURCES} ${SHADER_SOURCES} ${INPUT_SOURCES} ${VIEWPORT_SOURCES})
 
 # Set runtime library
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")  # Use /MD for Release, /MDd for Debug

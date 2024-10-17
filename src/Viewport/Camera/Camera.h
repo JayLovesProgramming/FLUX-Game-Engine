@@ -1,10 +1,13 @@
-#pragma once
+#ifndef CAMERA_UTILS_H
+#define CAMERA_UTILS_H
+
 #include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
 
-extern bool firstMouse; // Used to detect the first mouse movement
-extern float lastX;     // Initial mouse X
-extern float lastY;     // Initial mouse Y
-extern float yaw;       // Yaw is initialized to this value
-extern float pitch;     // Pitch is initialized to this value
+extern float yaw;   // Declare external variables for yaw and pitch
+extern float pitch;
 
-glm::vec3 getCameraFront();
+glm::vec3 getCameraFront(); // Function declaration
+
+#endif

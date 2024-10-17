@@ -321,11 +321,14 @@ if %errorlevel% neq 0 goto :VCEnd</Command>
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="C:\glad\src\glad.c" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\main.cpp" />
-    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Loader\ShaderLoader.cpp" />
+    <ClCompile Include="C:\glad\src\glad.c" />
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Utils\FrameBufferSizeCallback.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Compiler\ShaderCompiler.cpp" />
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Shader\Loader\ShaderLoader.cpp" />
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Keyboard\ProcessInput.cpp" />
     <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Input\Mouse\MouseInput.cpp" />
+    <ClCompile Include="C:\Users\jayxw\Desktop\test\glfw_concept\src\Viewport\Camera\Camera.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="C:\Users\jayxw\Desktop\test\glfw_concept\build\ZERO_CHECK.vcxproj">

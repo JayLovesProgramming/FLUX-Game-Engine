@@ -1,7 +1,5 @@
 #include "Camera.h"
 
-
-
 glm::vec3 getCameraFront()
 {
     glm::vec3 front;
