@@ -12,3 +12,6 @@ extern float currentCameraSpeed;
 
 float processInput(GLFWwindow *window, glm::vec3 &position, float &currentCameraSpeed, float deltaTime);
 
+void handleMouseToggle(GLFWwindow* window, float currentTime);
+
+float updateCameraSpeed(float deltaTime);

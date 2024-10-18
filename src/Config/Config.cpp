@@ -3,3 +3,4 @@
 
 float cameraSpeed  = 1.5f;
 bool fullscreen = false;
+bool imGUIEnabled = true;

@@ -1,7 +1,7 @@
 // ControllerInput.cpp
 // TODO: Make path relative
 #include "ControllerInput.h"
-#include "C:\Users\jayxw\Desktop\test\FLUX\src\Viewport\Camera\Camera.h"
+#include "../../Viewport/Camera/Camera.h"
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // GLM

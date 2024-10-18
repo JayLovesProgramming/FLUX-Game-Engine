@@ -7,10 +7,10 @@
 #include "imgui_impl_opengl3.h"
 
 
-void initImGUI(GLFWwindow *window);
+void initImGUI(GLFWwindow *window, bool imGUIEnabled);
 
-void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSpeed, float frameRate, float cameraSpeed, float deltaTime);
+void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSpeed, float frameRate, float cameraSpeed, float deltaTime, bool imGUIEnabled);
 
-void renderImGUI();
+void cleanUpImGUI(bool imGUIEnabled);
 
-void cleanUpImGUI();
+void renderImGUI(bool imGUIEnabled);

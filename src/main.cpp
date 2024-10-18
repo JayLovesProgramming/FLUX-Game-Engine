@@ -28,7 +28,6 @@ static int frameCount = 0;
 static float frameRate = 0.0f;
 float deltaTime = 0.0f;          // Time between current frame and last frame
 float lastFrame = 0.0f;          // Time of the last frame
-const bool vSyncEnabled = false; // TODO: Avoid screen-tear when this is false
 
 // Vertex data (coordinates and texture coordinates)
 const std::array<float, 30> vertices = {
@@ -79,7 +78,7 @@ int main()
     
     initGLAD();
 
-    initImGUI(window);
+    initImGUI(window, imGUIEnabled);
 
     glEnable(GL_DEPTH_TEST); // Enable depth testing
     
@@ -132,7 +131,7 @@ int main()
             frameCount = 0;
         }
 
-        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed, frameRate, cameraSpeed, deltaTime); // Pass camera position
+        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed, frameRate, cameraSpeed, deltaTime, imGUIEnabled); // Pass camera position
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -145,16 +144,13 @@ int main()
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 6); // Draw the triangles
-
-        // Render ImGui
-        renderImGUI();
-
+        renderImGUI(imGUIEnabled);
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     // Clean up
-    cleanUpImGUI();
+    cleanUpImGUI(imGUIEnabled);
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteProgram(shaderProgram);

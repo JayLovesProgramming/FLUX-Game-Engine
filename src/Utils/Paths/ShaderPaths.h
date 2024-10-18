@@ -4,5 +4,4 @@
 #include <string>
 
 // TODO: Change to relative path
-const std::string SHADER_DIR = "C:/Users/jayxw/Desktop/test/FLUX/src/Shader/glsl/";
-
+const std::string SHADER_DIR = "C:/Users/jayxw/Desktop/test/FLUX/src/Shader/GLSL/";

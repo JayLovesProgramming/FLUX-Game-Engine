@@ -1,16 +1,17 @@
 // ImGUI.cpp
 #include "ImGUI.h"
+#include "C:\Users\jayxw\Desktop\test\FLUX\src\Config\Config.h"
 
-const bool imGUIEnabled = true;
+constexpr const char *iniFileDir = "C:/Users/jayxw/Desktop/test/FLUX/src/GUI/ImGUI/imgui.ini";
 
-void initImGUI(GLFWwindow *window)
+void initImGUI(GLFWwindow *window, bool imGUIEnabled)
 {
     if (imGUIEnabled)
     {
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
-        io.IniFilename = "C:/Users/jayxw/Desktop/test/FLUX/src/Utils/imgui.ini";
+        io.IniFilename = iniFileDir;
         (void)io;
         ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(window, true);
@@ -18,7 +19,7 @@ void initImGUI(GLFWwindow *window)
     }
 }
 
-void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSpeed, float frameRate, float cameraSpeed, float deltaTime)
+void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSpeed, float frameRate, float cameraSpeed, float deltaTime, bool imGUIEnabled)
 {
     if (imGUIEnabled)
     {
@@ -43,8 +44,9 @@ void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSp
     }
 }
 
-void renderImGUI()
+void renderImGUI(bool imGUIEnabled)
 {
+
     if (imGUIEnabled)
     {
         ImGui::Render();
@@ -52,7 +54,7 @@ void renderImGUI()
     }
 }
 
-void cleanUpImGUI()
+void cleanUpImGUI(bool imGUIEnabled)
 {
     if (imGUIEnabled)
     {
