@@ -9,3 +9,5 @@ extern float yaw;
 extern float pitch;
 
 glm::vec3 getCameraFront();
+
+float degreesToRadians(float degrees);

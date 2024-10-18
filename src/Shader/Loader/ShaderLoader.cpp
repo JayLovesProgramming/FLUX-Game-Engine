@@ -7,7 +7,7 @@ std::string LoadShader(const std::string& filePath)
     std::ifstream file(filePath, std::ios::in | std::ios::binary);
     if (!file)
     {
-        std::cerr << "ERROR: Could not opne shader file: "<< filePath << std::endl;
+        std::cerr << "ERROR: Could not open shader file: "<< filePath << std::endl;
         return "";
     }
 
