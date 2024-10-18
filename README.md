@@ -6,7 +6,7 @@
 ## Features
 
 ### Client
-- **ImGUI**: **✅ Done**  
+- **Dear ImGUI (Not ImGUI)**: **✅ Done**  
   Integrated for immediate UI functionality, enabling rapid development and debugging.
   
 - **Renderer**: **🔄 In Progress**  
