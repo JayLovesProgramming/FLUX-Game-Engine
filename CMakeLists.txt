@@ -19,6 +19,7 @@ set(IMGUI_SRC
     "C:/imgui/imgui.cpp"
     "C:/imgui/imgui_demo.cpp"
     "C:/imgui/imgui_draw.cpp"
+    "C:/imgui/imgui_tables.cpp"
     "C:/imgui/imgui_widgets.cpp"
     "C:/imgui/imgui_impl_glfw.cpp"
     "C:/imgui/imgui_impl_opengl3.cpp"
@@ -53,7 +54,7 @@ add_executable(${PROJECT_NAME}
     ${INPUT_GAMEPAD_SOURCES}
     ${VIEWPORT_SOURCES}
     ${CONFIG_SOURCES}
-    # ${IMGUI_SRC}  # Include ImGui sources
+    ${IMGUI_SRC}  # Include ImGui sources
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")  # Use /MD for Release, /MDd for Debug

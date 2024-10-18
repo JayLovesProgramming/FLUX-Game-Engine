@@ -67,16 +67,6 @@ int main()
         return -1;
     }
 
-    // Initialize ImGui
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
-
-    // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
-
     glEnable(GL_DEPTH_TEST); // Enable depth testing
 
     // Load and compile shaders
@@ -114,26 +104,6 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-     
-
-
-        // Start the ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        // Create a simple window
-        {
-            ImGui::Begin("Hello, ImGui!"); // Create a window
-            ImGui::Text("This is a simple ImGui example."); // Display some text
-
-            static float my_var = 0.0f;
-            ImGui::SliderFloat("My Float", &my_var, 0.0f, 1.0f); // Create a slider
-            ImGui::Text("Value: %.3f", my_var);
-
-            ImGui::End(); // End the window
-        }
-      
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
         processInput(window, cameraPos); // Process input
 
@@ -149,20 +119,12 @@ int main()
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 6); // Draw the triangles
-        
-        // Render ImGui
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
     // Clean up
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteProgram(shaderProgram);
