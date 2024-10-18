@@ -1,8 +1,5 @@
 // ProcessInput.cpp
 #include "ProcessInput.h"
-#include "../../Config/Config.h" // Include the header to access the global variables
-#include "../Gamepad/ControllerInput.h"
-#include "../../Viewport/Camera/Camera.h"
 
 bool mouseEnabled = true;
 bool imguiToggled = false;

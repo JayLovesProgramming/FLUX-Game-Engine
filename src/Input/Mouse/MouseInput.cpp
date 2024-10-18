@@ -1,6 +1,5 @@
 // MouseInput.cpp
 #include "MouseInput.h"
-#include "C:\Users\jayxw\Desktop\test\FLUX\src\Input\Keyboard\ProcessInput.h"
 
 bool firstMouse = true; // Used to detect the first mouse movement
 float lastX = 0.0f;     // Initial mouse X

@@ -19,11 +19,6 @@
 #include "Utils/Paths/ShaderPaths.h"
 #include "Utils/FrameBufferSize/FrameBufferSizeCallback.h"
 #include "Viewport/Camera/Camera.h"
-
-#include "imgui.h"
-#include "imgui_impl_glfw.h"
-#include "imgui_impl_opengl3.h"
-
 #include "GUI/ImGUI/ImGUI.h"
 
 // Initialize variables for frame rate calculation

@@ -10,6 +10,7 @@ void initImGUI(GLFWwindow *window)
         IMGUI_CHECKVERSION();
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
+        io.IniFilename = "C:/Users/jayxw/Desktop/test/FLUX/src/Utils/imgui.ini";
         (void)io;
         ImGui::StyleColorsDark();
         ImGui_ImplGlfw_InitForOpenGL(window, true);
