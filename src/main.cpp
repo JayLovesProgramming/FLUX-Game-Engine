@@ -31,7 +31,7 @@ static int frameCount = 0;
 static float frameRate = 0.0f;
 float deltaTime = 0.0f; // Time between current frame and last frame
 float lastFrame = 0.0f; // Time of the last frame
-const bool vSyncEnabled = false;
+const bool vSyncEnabled = true;
 // TODO: When we set this to false, it fucks up the movement because of the code within dearImGuiBaby is required globablly
 const bool imGUIEnabled = true;
 
