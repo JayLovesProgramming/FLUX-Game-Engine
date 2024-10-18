@@ -5,6 +5,7 @@
 #include <glm/glm.hpp>
 
 extern float cameraSpeed;
+extern float currentCameraSpeed;
 
-void processInput(GLFWwindow *window, glm::vec3 &position);
+float processInput(GLFWwindow *window, glm::vec3 &position, float &currentCameraSpeed, float deltaTime);
 

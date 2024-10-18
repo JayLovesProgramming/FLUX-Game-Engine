@@ -1,3 +1,4 @@
+// main.cpp
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -27,6 +28,12 @@
 static double lastTime = glfwGetTime();
 static int frameCount = 0;
 static float frameRate = 0.0f;
+float deltaTime = 0.0f; // Time between current frame and last frame
+float lastFrame = 0.0f; // Time of the last frame
+const bool vSyncEnabled = false;
+
+// TODO: When we set this to false, it fucks up the movement for what reason i dunno it's too late
+const bool imGUIEnabled = true;
 
 // Vertex data (coordinates and texture coordinates)
 const std::array<float, 30> vertices = {
@@ -39,32 +46,64 @@ const std::array<float, 30> vertices = {
     -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // Top-left
 };
 
-void cleanUpImGUI()
+void initImGUI(GLFWwindow *window)
 {
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
+    if (imGUIEnabled)
+    {
+        // Initialize ImGui
+        IMGUI_CHECKVERSION();
+        ImGui::CreateContext();
+        ImGuiIO &io = ImGui::GetIO();
+        (void)io;
+        ImGui::StyleColorsDark();
+        // Setup Platform/Renderer bindings
+        ImGui_ImplGlfw_InitForOpenGL(window, true);
+        ImGui_ImplOpenGL3_Init("#version 330");
+    }
 }
 
-void dearImGuiBaby(const std::array<float, 30> &cameraPos)
+void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSpeed)
 {
-    ImGui_ImplOpenGL3_NewFrame();
-    ImGui_ImplGlfw_NewFrame();
-    ImGui::NewFrame();
-    ImGui::Begin("FLUX System Properties");
-    // Calculate frame rate
-    frameCount++;
-    double currentTime = glfwGetTime();
-    if (currentTime - lastTime >= 1.0)
-    { // Update frame rate every second
-        frameRate = frameCount / static_cast<float>((currentTime - lastTime));
-        lastTime = currentTime;
-        frameCount = 0;
+    if (imGUIEnabled)
+    {
+        ImGui_ImplOpenGL3_NewFrame();
+        ImGui_ImplGlfw_NewFrame();
+        ImGui::NewFrame();
+        ImGui::Begin("FLUX System Properties");
+
+        // TODO: Do the below outside of this function so it's ONLY imgui
+        // Calculate frame rate
+        frameCount++;
+        double currentFrame = glfwGetTime();
+        deltaTime = static_cast<float>(currentFrame - lastFrame);
+        lastFrame = static_cast<float>(currentFrame);
+        if (currentFrame - lastTime >= 1.0)
+        { // Update frame rate every second
+            frameRate = frameCount / static_cast<float>((currentFrame - lastTime));
+            lastTime = currentFrame;
+            frameCount = 0;
+        }
+
+        
+        ImGui::Text("Frame Rate: %.4f FPS", frameRate); // Display frame rate
+        // Display camera position, assuming cameraPos contains x, y, z at index 0, 1, 2
+        ImGui::Text("Camera Position: (%.4f, %.4f, %.4f)", cameraPos[0], cameraPos[1], cameraPos[2]);
+        ImGui::Text("Camera Speed: (%.3f)", cameraSpeed);
+        ImGui::Text("Movement Speed: (%.8f)", currentCameraSpeed);
+
+        ImGui::Text("Delta Time: (%.8f)", deltaTime);
+        ImGui::End(); // End the window
     }
-    ImGui::Text("Frame Rate: %.2f FPS", frameRate); // Display frame rate
-    // Display camera position, assuming cameraPos contains x, y, z at index 0, 1, 2
-    ImGui::Text("Camera Position: (%.2f, %.2f, %.2f)", cameraPos[0], cameraPos[1], cameraPos[2]);
-    ImGui::End(); // End the window
+}
+
+void cleanUpImGUI()
+{
+    if (imGUIEnabled)
+    {
+        ImGui_ImplOpenGL3_Shutdown();
+        ImGui_ImplGlfw_Shutdown();
+        ImGui::DestroyContext();
+    }
 }
 
 int main()
@@ -87,7 +126,7 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
-    glfwSwapInterval(0); // Disable V-Sync
+    glfwSwapInterval(vSyncEnabled); // V-Sync
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -101,16 +140,7 @@ int main()
         return -1;
     }
 
-    // Initialize ImGui
-    IMGUI_CHECKVERSION();
-    ImGui::CreateContext();
-    ImGuiIO &io = ImGui::GetIO();
-    (void)io;
-    ImGui::StyleColorsDark();
-
-    // Setup Platform/Renderer bindings
-    ImGui_ImplGlfw_InitForOpenGL(window, true);
-    ImGui_ImplOpenGL3_Init("#version 330");
+    initImGUI(window);
 
     glEnable(GL_DEPTH_TEST); // Enable depth testing
 
@@ -149,10 +179,9 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
-        processInput(window, cameraPos);                        // Process input
-        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}); // Pass camera position
+        processInput(window, cameraPos, currentCameraSpeed, static_cast<float>(deltaTime)); // Pass by reference                 // Process input
+        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed);         // Pass camera position
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -167,8 +196,11 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6); // Draw the triangles
 
         // Render ImGui
-        ImGui::Render();
-        ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        if (imGUIEnabled)
+        {
+            ImGui::Render();
+            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+        }
 
         glfwSwapBuffers(window);
         glfwPollEvents();

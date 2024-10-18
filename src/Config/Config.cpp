@@ -1,5 +1,5 @@
 // Config.cpp
 #include "Config.h"
 
-float cameraSpeed  = 0.05f;
+float cameraSpeed  = 2.5f;
 bool fullscreen = false;
