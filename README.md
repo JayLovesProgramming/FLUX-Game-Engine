@@ -1,7 +1,7 @@
 # FLUX Game Engine (WIP)
 
 ## Overview
-FLUX is a versatile game engine currently under development, designed to empower both 3D and 2D game development over the next 10 to 15 years. Built with an emphasis on flexibility, performance, and community involvement, FLUX aims to provide developers with a robust toolkit for creating engaging gameplay experiences.
+**FLUX** is a versatile game engine currently under development, designed to empower both 3D and 2D game development over the next 10 to 15 years. Built with an emphasis on flexibility, performance, and community involvement, **FLUX** aims to provide developers with a robust toolkit for creating engaging gameplay experiences.
 
 ## Features
 
@@ -63,7 +63,7 @@ FLUX is a versatile game engine currently under development, designed to empower
   Planning to add support for multiple languages and regional settings for broader accessibility.
 
 ## Contribution
-This project is currently a one-person endeavor, but I welcome contributions and collaboration! If you're interested in learning more about game engine development or would like to contribute to FLUX, please reach out to me via Discord: **@jw_uk**. Together, we can build a powerful game engine and share knowledge within the community.
+This project is currently a one-person endeavor, but I welcome contributions and collaboration! If you're interested in learning more about game engine development or would like to contribute to **FLUX**, please reach out to me via Discord: **@jw_uk**. Together, we can build a powerful game engine and share knowledge within the community.
 
 ## Roadmap
 - Expand documentation for contributors, including setup instructions and coding guidelines.
