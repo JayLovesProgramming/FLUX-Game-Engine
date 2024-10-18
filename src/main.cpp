@@ -33,8 +33,7 @@ static int frameCount = 0;
 static float frameRate = 0.0f;
 float deltaTime = 0.0f;          // Time between current frame and last frame
 float lastFrame = 0.0f;          // Time of the last frame
-const bool vSyncEnabled = false; // TODO: Avoid screen-tear when this is falses
-// TODO: When we set this to false, it fucks up the movement because of the code within dearImGuiBaby is required globablly
+const bool vSyncEnabled = false; // TODO: Avoid screen-tear when this is false
 
 // Vertex data (coordinates and texture coordinates)
 const std::array<float, 30> vertices = {
@@ -47,14 +46,27 @@ const std::array<float, 30> vertices = {
     -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // Top-left
 };
 
+int initGLAD()
+{
+    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
+    {
+        std::cerr << "ERROR: Failed to initialize GLAD" << std::endl;
+        glfwTerminate();
+        return -1;
+    }
+    return 0;
+}
+
 int main()
 {
     // Init GLFW
     assert(glfwInit());
+
     // GLFW Window Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
     GLFWmonitor *monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
     GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "FLUX Game Engine (Alpha Build 0.1)", monitor, nullptr);
     if (!window)
@@ -63,20 +75,19 @@ int main()
         glfwTerminate();
         return -1;
     }
+
     glfwMakeContextCurrent(window);
     glfwSwapInterval(vSyncEnabled); // V-Sync
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
-    // Register mouse callback
     glfwSetCursorPosCallback(window, mouse_callback);
-    if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
-    {
-        std::cerr << "ERROR: Failed to initialize GLAD" << std::endl;
-        glfwTerminate();
-        return -1;
-    }
+    
+    initGLAD();
+
     initImGUI(window);
+
     glEnable(GL_DEPTH_TEST); // Enable depth testing
+    
     // Load and compile shaders
     std::string vertexShaderSource = LoadShader(SHADER_DIR + "vertexShader.glsl");
     std::string fragmentShaderSource = LoadShader(SHADER_DIR + "fragmentShader.glsl");
