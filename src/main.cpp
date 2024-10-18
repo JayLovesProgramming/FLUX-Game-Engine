@@ -24,16 +24,17 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+#include "GUI/ImGUI/ImGUI.h"
+
 // Initialize variables for frame rate calculation
 // TODO: Place in a config
 static double lastTime = glfwGetTime();
 static int frameCount = 0;
 static float frameRate = 0.0f;
-float deltaTime = 0.0f; // Time between current frame and last frame
-float lastFrame = 0.0f; // Time of the last frame
-const bool vSyncEnabled = true; // TODO: Avoid screen-tear when this is falses
+float deltaTime = 0.0f;          // Time between current frame and last frame
+float lastFrame = 0.0f;          // Time of the last frame
+const bool vSyncEnabled = false; // TODO: Avoid screen-tear when this is falses
 // TODO: When we set this to false, it fucks up the movement because of the code within dearImGuiBaby is required globablly
-const bool imGUIEnabled = true;
 
 // Vertex data (coordinates and texture coordinates)
 const std::array<float, 30> vertices = {
@@ -45,69 +46,6 @@ const std::array<float, 30> vertices = {
     0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
     -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // Top-left
 };
-
-void initImGUI(GLFWwindow *window)
-{
-    if (imGUIEnabled)
-    {
-        // Initialize ImGui
-        IMGUI_CHECKVERSION();
-        ImGui::CreateContext();
-        ImGuiIO &io = ImGui::GetIO();
-        (void)io;
-        ImGui::StyleColorsDark();
-        // Setup Platform/Renderer bindings
-        ImGui_ImplGlfw_InitForOpenGL(window, true);
-        ImGui_ImplOpenGL3_Init("#version 330");
-    }
-}
-
-void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSpeed)
-{
-    if (imGUIEnabled)
-    {
-        // TODO: Do the below outside of this function so it's ONLY imgui inside this function
-        // Calculate frame rate
-        frameCount++;
-        double currentFrame = glfwGetTime();
-        deltaTime = static_cast<float>(currentFrame - lastFrame);
-        lastFrame = static_cast<float>(currentFrame);
-        if (currentFrame - lastTime >= 1.0)
-        { // Update frame rate every second
-            frameRate = frameCount / static_cast<float>((currentFrame - lastTime));
-            lastTime = currentFrame;
-            frameCount = 0;
-        }
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-        ImGui::Begin("FLUX System Properties");
-        ImGui::Text("Performance Metrics");             
-        ImGui::Separator();                           
-        ImGui::Text("Frame Rate: %.2f FPS", frameRate);
-        ImGui::Spacing();
-        ImGui::Text("Camera Properties"); 
-        ImGui::Separator();              
-        ImGui::Text("Camera Position: (%.2f, %.2f, %.2f)", cameraPos[0], cameraPos[1], cameraPos[2]);
-        ImGui::Text("Camera Speed: %.3f", cameraSpeed);
-        ImGui::Text("Movement Speed: %.7f", currentCameraSpeed);
-        ImGui::Spacing();
-        ImGui::Text("Timing Metrics");
-        ImGui::Separator();
-        ImGui::Text("Delta Time: %.7f", deltaTime);
-        ImGui::End();
-    }
-}
-
-void cleanUpImGUI()
-{
-    if (imGUIEnabled)
-    {
-        ImGui_ImplOpenGL3_Shutdown();
-        ImGui_ImplGlfw_Shutdown();
-        ImGui::DestroyContext();
-    }
-}
 
 int main()
 {
@@ -176,7 +114,19 @@ int main()
     {
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
         processInput(window, cameraPos, currentCameraSpeed, static_cast<float>(deltaTime)); // Pass by reference                 // Process input
-        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed);         // Pass camera position
+
+        frameCount++;
+        double currentFrame = glfwGetTime();
+        deltaTime = static_cast<float>(currentFrame - lastFrame);
+        lastFrame = static_cast<float>(currentFrame);
+        if (currentFrame - lastTime >= 1.0)
+        { // Update frame rate every second
+            frameRate = frameCount / static_cast<float>((currentFrame - lastTime));
+            lastTime = currentFrame;
+            frameCount = 0;
+        }
+
+        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed, frameRate, cameraSpeed, deltaTime); // Pass camera position
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -191,11 +141,7 @@ int main()
         glDrawArrays(GL_TRIANGLES, 0, 6); // Draw the triangles
 
         // Render ImGui
-        if (imGUIEnabled)
-        {
-            ImGui::Render();
-            ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-        }
+        renderImGUI();
 
         glfwSwapBuffers(window);
         glfwPollEvents();

@@ -43,6 +43,8 @@ file(GLOB_RECURSE INPUT_GAMEPAD_SOURCES src/Input/Gamepad/*.cpp)
 file(GLOB_RECURSE VIEWPORT_SOURCES src/Viewport/*.cpp)
 # /Config
 file(GLOB_RECURSE CONFIG_SOURCES src/Config/*.cpp)
+# /GUI
+file(GLOB_RECURSE GUI_SOURCES src/GUI/*.cpp)
 
 add_executable(${PROJECT_NAME}
     src/main.cpp
@@ -54,6 +56,7 @@ add_executable(${PROJECT_NAME}
     ${INPUT_GAMEPAD_SOURCES}
     ${VIEWPORT_SOURCES}
     ${CONFIG_SOURCES}
+    ${GUI_SOURCES}
     ${IMGUI_SRC}  # Include ImGui sources
 )
 
