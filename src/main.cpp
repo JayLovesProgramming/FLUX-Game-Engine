@@ -3,11 +3,11 @@
 #include <sstream>
 #include <fstream>
 #include <array>
-#include <glad/glad.h> // GLAD
-#include <GLFW/glfw3.h> // GLFW
-#include <glm/glm.hpp> // GLM
+#include <glad/glad.h>                  // GLAD
+#include <GLFW/glfw3.h>                 // GLFW
+#include <glm/glm.hpp>                  // GLM
 #include <glm/gtc/matrix_transform.hpp> // GLM
-#include <glm/gtc/type_ptr.hpp> // GLM
+#include <glm/gtc/type_ptr.hpp>         // GLM
 
 #include "Config/Config.h"
 #include "Shader/Compiler/ShaderCompiler.h"
@@ -23,16 +23,49 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+// Initialize variables for frame rate calculation
+static double lastTime = glfwGetTime();
+static int frameCount = 0;
+static float frameRate = 0.0f;
+
 // Vertex data (coordinates and texture coordinates)
 const std::array<float, 30> vertices = {
     // Positions        // Texture Coords
     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
-     0.5f, -0.5f, 0.0f, 1.0f, 0.0f, // Bottom-right
-     0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // Top-right
+    0.5f, -0.5f, 0.0f, 1.0f, 0.0f,  // Bottom-right
+    0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f, // Bottom-left
-     0.5f,  0.5f, 0.0f, 1.0f, 1.0f, // Top-right
-    -0.5f,  0.5f, 0.0f, 0.0f, 1.0f  // Top-left
+    0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
+    -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // Top-left
 };
+
+void cleanUpImGUI()
+{
+    ImGui_ImplOpenGL3_Shutdown();
+    ImGui_ImplGlfw_Shutdown();
+    ImGui::DestroyContext();
+}
+
+void dearImGuiBaby(const std::array<float, 30> &cameraPos)
+{
+    ImGui_ImplOpenGL3_NewFrame();
+    ImGui_ImplGlfw_NewFrame();
+    ImGui::NewFrame();
+    ImGui::Begin("FLUX System Properties");
+    // Calculate frame rate
+    frameCount++;
+    double currentTime = glfwGetTime();
+    if (currentTime - lastTime >= 1.0)
+    { // Update frame rate every second
+        frameRate = frameCount / static_cast<float>((currentTime - lastTime));
+        lastTime = currentTime;
+        frameCount = 0;
+    }
+    ImGui::Text("Frame Rate: %.2f FPS", frameRate); // Display frame rate
+    // Display camera position, assuming cameraPos contains x, y, z at index 0, 1, 2
+    ImGui::Text("Camera Position: (%.2f, %.2f, %.2f)", cameraPos[0], cameraPos[1], cameraPos[2]);
+    ImGui::End(); // End the window
+}
 
 int main()
 {
@@ -54,6 +87,7 @@ int main()
     }
 
     glfwMakeContextCurrent(window);
+    glfwSwapInterval(0); // Disable V-Sync
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
@@ -70,7 +104,8 @@ int main()
     // Initialize ImGui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
-    ImGuiIO& io = ImGui::GetIO(); (void)io;
+    ImGuiIO &io = ImGui::GetIO();
+    (void)io;
     ImGui::StyleColorsDark();
 
     // Setup Platform/Renderer bindings
@@ -114,29 +149,10 @@ int main()
 
     while (!glfwWindowShouldClose(window))
     {
-     
 
-
-        // Start the ImGui frame
-        ImGui_ImplOpenGL3_NewFrame();
-        ImGui_ImplGlfw_NewFrame();
-        ImGui::NewFrame();
-
-        // Create a simple window
-        {
-            ImGui::Begin("Hello, ImGui!"); // Create a window
-            ImGui::Text("This is a simple ImGui example."); // Display some text
-
-            static float my_var = 0.0f;
-            ImGui::SliderFloat("My Float", &my_var, 0.0f, 1.0f); // Create a slider
-            ImGui::Text("Value: %.3f", my_var);
-
-            ImGui::End(); // End the window
-        }
-      
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
-        processInput(window, cameraPos); // Process input
-
+        processInput(window, cameraPos);                        // Process input
+        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}); // Pass camera position
         glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -149,7 +165,7 @@ int main()
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 6); // Draw the triangles
-        
+
         // Render ImGui
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -159,14 +175,10 @@ int main()
     }
 
     // Clean up
-    ImGui_ImplOpenGL3_Shutdown();
-    ImGui_ImplGlfw_Shutdown();
-    ImGui::DestroyContext();
-
+    cleanUpImGUI();
     glDeleteVertexArrays(1, &VAO);
     glDeleteBuffers(1, &VBO);
     glDeleteProgram(shaderProgram);
-
     glfwTerminate();
     return 0;
 }
