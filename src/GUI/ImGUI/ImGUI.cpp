@@ -4,6 +4,23 @@
 
 constexpr const char *iniFileDir = "C:/Users/jayxw/Desktop/test/FLUX/src/GUI/ImGUI/imgui.ini";
 
+void setCustomColors()
+{
+    ImGuiStyle& style = ImGui::GetStyle();
+
+    // Set custom colors
+    style.Colors[ImGuiCol_Text] = ImVec4(1.0f, 1.0f, 1.0f, 1.0f);      // White text
+    style.Colors[ImGuiCol_WindowBg] = ImVec4(0.1f, 0.1f, 0.1f, 1.0f); // Dark background
+    style.Colors[ImGuiCol_Border] = ImVec4(0.0f, 0.0f, 0.0f, 1.0f); // Black border
+    style.Colors[ImGuiCol_TitleBg] = ImVec4(0.5f, 1.0f, 0.5f, 0.5f); // Blue title bar background
+    style.Colors[ImGuiCol_TitleBgActive] = ImVec4(0.5f, 1.0f, 0.5f, 0.5f); // Darker blue when active
+    
+    // Baby green button colors
+    style.Colors[ImGuiCol_Button] = ImVec4(0.5f, 1.0f, 0.5f, 0.5f);  // Baby green button
+    style.Colors[ImGuiCol_ButtonHovered] = ImVec4(0.6f, 1.0f, 0.6f, 0.5f); // Lighter baby green when hovered
+    style.Colors[ImGuiCol_ButtonActive] = ImVec4(0.4f, 0.8f, 0.4f, 1.0f); // Darker baby green when active
+}
+
 void initImGUI(GLFWwindow *window, bool imGUIEnabled)
 {
     if (imGUIEnabled)
@@ -13,7 +30,7 @@ void initImGUI(GLFWwindow *window, bool imGUIEnabled)
         ImGuiIO &io = ImGui::GetIO();
         io.IniFilename = iniFileDir;
         (void)io;
-        ImGui::StyleColorsDark();
+         setCustomColors();
         ImGui_ImplGlfw_InitForOpenGL(window, true);
         ImGui_ImplOpenGL3_Init("#version 330");
     }
@@ -39,6 +56,12 @@ void dearImGuiBaby(const std::array<float, 30> &cameraPos, float currentCameraSp
         ImGui::Spacing();
         ImGui::Text("Timing Metrics");
         ImGui::Separator();
+        if (ImGui::Button("Reset Camera Position"))
+        {
+            // cameraPos[0] = 0.0f;
+            // cameraPos[1] = 0.0f;
+            // cameraPos[2] = 0.0f;
+        }
         ImGui::Text("Delta Time: %.7f", deltaTime);
         ImGui::End();
     }

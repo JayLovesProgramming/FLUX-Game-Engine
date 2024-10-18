@@ -1,4 +1,3 @@
-// ProcessInput.cpp
 #include "ProcessInput.h"
 
 bool mouseEnabled = true;
@@ -9,11 +8,12 @@ float currentCameraSpeed = 0.01f;
 
 const float toggleCooldown = 0.5f;    // Half a second
 const glm::vec3 WORLD_UP(0.0f, 1.0f, 0.0f); // Global up direction
+const float speedBoostFactor = 0.2f;  // Speed increase when shift is pressed
 
 float processInput(GLFWwindow *window, glm::vec3 &position, float &currentCameraSpeed, float deltaTime)
 {
     // Update the currentCameraSpeed based on the defined camera speed in Config
-     currentCameraSpeed = updateCameraSpeed(deltaTime); // Assuming cameraSpeed is defined in Config.h
+    currentCameraSpeed = updateCameraSpeed(deltaTime); // Assuming cameraSpeed is defined in Config.h
 
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
     {
@@ -43,6 +43,31 @@ float processInput(GLFWwindow *window, glm::vec3 &position, float &currentCamera
         if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         {
             position += glm::normalize(glm::cross(front, WORLD_UP)) * currentCameraSpeed;
+        }
+        
+        // Increase camera speed temporarily when LEFT SHIFT is pressed
+        float boostedCameraSpeed = currentCameraSpeed;
+        if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        {
+            boostedCameraSpeed += speedBoostFactor;  // Increase speed
+        }
+        
+        // Update position with boosted speed if shift is pressed
+        if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+        {
+            position += front * boostedCameraSpeed; 
+        }
+        if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+        {
+            position -= front * boostedCameraSpeed; 
+        }
+        if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+        {
+            position -= glm::normalize(glm::cross(front, WORLD_UP)) * boostedCameraSpeed;
+        }
+        if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+        {
+            position += glm::normalize(glm::cross(front, WORLD_UP)) * boostedCameraSpeed;
         }
     }
 
@@ -77,5 +102,5 @@ void handleMouseToggle(GLFWwindow *window, float currentTime)
 // Update camera speed based on deltaTime
 float updateCameraSpeed(float deltaTime)
 {
-    return cameraSpeed * deltaTime;
+    return cameraSpeed * deltaTime;  // Assuming cameraSpeed is defined globally or passed correctly
 }
