@@ -72,3 +72,9 @@ This project is currently a one-person endeavor, but I welcome contributions and
 
 ## License
 This project is open-source, and I encourage others to explore, learn, and contribute. See the [LICENSE](LICENSE) file for details.
+
+
+## Gallery
+<div style="display: flex; justify-content: space-around;">
+  <img src="docs\gallery\imgui.png" width="200" alt="Image 3"/>
+</div>
