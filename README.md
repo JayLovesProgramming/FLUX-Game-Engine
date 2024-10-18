@@ -3,7 +3,7 @@
 Engine Features:
   - Client:
     - Renderer - In Progress
-    - ImGUI - In Progress
+    - ImGUI - Done
     - ECS (Entity Component System) - Not Started
     - Networking Client - Not Started
     - Audio - Not Started
