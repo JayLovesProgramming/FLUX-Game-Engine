@@ -10,21 +10,11 @@ std::string LoadShader(const std::string& filePath)
         std::cerr << "ERROR: Could not opne shader file: "<< filePath << std::endl;
         return "";
     }
-    // Read the file into a string
-    return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-}
 
-// !OLD
-// std::string LoadShader(const std::string& filePath)
-// {
-//     std::ifstream file(filePath);
-//     std::stringstream buffer;
-//     if (file.is_open())
-//     {
-//         buffer << file.rdbuf();
-//         file.close();
-//     } else {
-//         std::cerr << "ERROR: Could not open shader file: " << filePath << std::endl;
-//     }
-//     return buffer.str();
-// }
+    // Read the file into a string
+    std::string shaderCode((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+    // Close the file explicity (it will close on destruction but let's just ensure it closes)
+    file.close();
+
+    return shaderCode;
+}
