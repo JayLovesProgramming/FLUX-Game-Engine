@@ -76,5 +76,5 @@ This project is open-source, and I encourage others to explore, learn, and contr
 
 ## Gallery
 <div style="display: flex; justify-content: space-around;">
-  <img src="docs\gallery\imgui.png" width="200" alt="Image 3"/>
+  <img src="docs\gallery\imgui.png" width="500" alt="ImGUI Example"/>
 </div>
