@@ -7,8 +7,8 @@
                 "C:/glad/include",
                 "C:/glm",
                 "C:/glfw/include",
-                "C:/imgui",
                 "C:/imgui/**",
+                "C:/stb/**",
                 "${workspaceFolder}/src/Shader/Loader"
             ],
             "intelliSenseMode": "windows-msvc-x64",

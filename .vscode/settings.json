@@ -64,6 +64,8 @@
         "list": "cpp",
         "unordered_set": "cpp",
         "xhash": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "functional": "cpp",
+        "unordered_map": "cpp"
     }
 }

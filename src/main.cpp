@@ -1,4 +1,3 @@
-// main.cpp
 #include <iostream>
 #include <vector>
 #include <sstream>
@@ -25,84 +24,186 @@
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include <stb_image.h>
+
 // Initialize variables for frame rate calculation
-// TODO: Place in a config
 static double lastTime = glfwGetTime();
 static int frameCount = 0;
 static float frameRate = 0.0f;
-float deltaTime = 0.0f;          // Time between current frame and last frame
-float lastFrame = 0.0f;          // Time of the last frame
+float deltaTime = 0.0f; // Time between current frame and last frame
+float lastFrame = 0.0f; // Time of the last frame
 
-// struct Mesh {
-//     std::vector<float> vertices;
-//     std::vector<unsigned int> indices;
-//     GLuint VAO, VBO, EBO;
+struct Mesh
+{
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+    GLuint VAO, VBO, EBO;
 
-//     Mesh(const std::vector<float>& verts, const std::vector<unsigned int>& inds)
-//         : vertices(verts), indices(inds) {
-//         setupMesh();
-//     }
+    Mesh(const std::vector<float> &verts, const std::vector<unsigned int> &inds)
+        : vertices(verts), indices(inds)
+    {
+        setupMesh();
+    }
 
-//     void setupMesh() {
-//         glGenVertexArrays(1, &VAO);
-//         glGenBuffers(1, &VBO);
-//         glGenBuffers(1, &EBO);
+    void setupMesh()
+    {
+        glGenVertexArrays(1, &VAO);
+        glGenBuffers(1, &VBO);
+        glGenBuffers(1, &EBO);
 
-//         glBindVertexArray(VAO);
+        glBindVertexArray(VAO);
 
-//         glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//         glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, VBO);
+        glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
 
-//         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
+        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), indices.data(), GL_STATIC_DRAW);
 
-//         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); // Position
-//         glEnableVertexAttribArray(0);
-//         // Add more vertex attributes as necessary (e.g., texture coords, normals)
-        
-//         glBindVertexArray(0);
-//     }
+        // Position attribute
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
+        glEnableVertexAttribArray(0);
 
-//     void draw() {
-//         glBindVertexArray(VAO);
-//         glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-//         glBindVertexArray(0);
-//     }
-// };
+        // Texture Coord attribute (if you use it)
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
 
-// Mesh loadModel(const std::string& path) {
-//     Assimp::Importer importer;
-//     const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
-    
-//     if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-//         std::cerr << "ERROR: Assimp failed to load model: " << importer.GetErrorString() << std::endl;
-//         return Mesh({}, {}); // Return empty mesh on failure
-//     }
+        glBindVertexArray(0);
+    }
 
-//     std::vector<float> vertices;
-//     std::vector<unsigned int> indices;
+    void draw(GLuint shaderProgram)
+    {
+        glBindVertexArray(VAO);
+        glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+        glBindVertexArray(0);
+    }
+};
 
-//     for (unsigned int i = 0; i < scene->mNumMeshes; i++) {
-//         aiMesh* mesh = scene->mMeshes[i];
-//         for (unsigned int j = 0; j < mesh->mNumVertices; j++) {
-//             aiVector3D pos = mesh->mVertices[j];
-//             vertices.push_back(pos.x);
-//             vertices.push_back(pos.y);
-//             vertices.push_back(pos.z);
-//             // Add more attributes as necessary (e.g., texture coords, normals)
-//         }
+// Function to load an OBJ file and its associated MTL file
+bool loadOBJ(const std::string &path, std::vector<float> &vertices, std::vector<unsigned int> &indices, std::string &mtlFileName)
+{
+    std::cout << "Loading object: " << path << std::endl;
+    std::ifstream file(path);
+    if (!file.is_open())
+    {
+        std::cerr << "Could not open the file: " << path << std::endl;
+        return false;
+    }
 
-//         for (unsigned int j = 0; j < mesh->mNumFaces; j++) {
-//             aiFace face = mesh->mFaces[j];
-//             for (unsigned int k = 0; k < face.mNumIndices; k++) {
-//                 indices.push_back(face.mIndices[k]);
-//             }
-//         }
-//     }
-    
-//     return Mesh(vertices, indices);
-// }
+    std::vector<float> temp_vertices;
+    std::vector<unsigned int> temp_indices;
 
+    std::string line;
+    while (std::getline(file, line))
+    {
+        std::istringstream s(line);
+        std::string prefix;
+        s >> prefix;
+
+        if (prefix == "v") // Vertex
+        {
+            float x, y, z;
+            s >> x >> y >> z;
+            temp_vertices.push_back(x);
+            temp_vertices.push_back(y);
+            temp_vertices.push_back(z);
+        }
+        else if (prefix == "f") // Face
+        {
+            unsigned int index;
+            s >> index; // OBJ indices are 1-based, convert to 0-based
+            temp_indices.push_back(index - 1);
+        }
+        else if (prefix == "mtllib") // Material file
+        {
+            s >> mtlFileName; // Read the material file name
+        }
+    }
+
+    // Move data into the final vectors
+    vertices = std::move(temp_vertices);
+    indices = std::move(temp_indices);
+
+    std::cout << "Loaded object successfully: "
+              << path << " with "
+              << vertices.size() / 5 << " vertices and " // Each vertex consists of 5 floats (3 for position + 2 for texCoords)
+              << indices.size() << " indices." << std::endl;
+
+    return true;
+}
+bool loadTexture(const std::string &filePath)
+{
+    int width, height, channels;
+    unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
+
+    if (!data)
+    {
+        std::cerr << "Failed to load texture: " << filePath << std::endl;
+        return false;
+    }
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+    glGenerateMipmap(GL_TEXTURE_2D);
+
+    stbi_image_free(data);
+    return true;
+}
+// Function to load materials from the .mtl file
+bool loadMTL(std::vector<GLuint> &textures)
+{
+    std::string path = "C:/Users/jayxw/Desktop/test/FLUX/models/bayard-station-valve-house/source/model/model.mtl";
+    std::cout << "Loading material: " << path << std::endl;
+
+    std::ifstream file(path);
+    if (!file.is_open())
+    {
+        std::cerr << "Could not open the file: " << path << std::endl;
+        return false;
+    }
+
+    std::string line;
+    std::string currentTextureName;
+
+    while (std::getline(file, line))
+    {
+        std::istringstream s(line);
+        std::string prefix;
+        s >> prefix;
+
+        if (prefix == "newmtl") // New material
+        {
+            s >> currentTextureName;
+        }
+        else if (prefix == "map_Kd") // Diffuse texture map
+        {
+            std::string texturePath;
+            s >> texturePath;
+
+            // unsigned int textureID;
+
+            // GLenum error = glGetError();
+            // if (error != GL_NO_ERROR)
+            // {
+            //     std::cerr << "OpenGL Error: " << error << std::endl;
+            // }
+
+            // glGenTextures(1, &textureID);
+            // // glBindTexture(GL_TEXTURE_3D, textureID);
+
+            // // // Load the texture using the helper function
+            // if (!loadTexture(texturePath, textureID))
+            // {
+            //     return false; // Exit if loading failed
+            // }
+
+            // textures.push_back(textureID); // Store the texture ID for use
+            std::cout << "Loaded texture: " << texturePath << " for material: " << currentTextureName << std::endl;
+        }
+    }
+
+    return true;
+}
 
 // Vertex data (coordinates and texture coordinates)
 const std::array<float, 30> vertices = {
@@ -128,112 +229,122 @@ int initGLAD()
 
 int main()
 {
-    // Init GLFW
+    // Initialize GLFW
     assert(glfwInit());
 
-    // GLFW Window Hints
+    // Set GLFW Window Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
+    // Load the model and textures
+    std::vector<float> vertices;
+    std::vector<unsigned int> indices;
+    std::string mtlFileName;
+
+    if (!loadOBJ("C:/Users/jayxw/Desktop/test/FLUX/models/bayard-station-valve-house/source/model/model.obj", vertices, indices, mtlFileName))
+    {
+        std::cerr << "Failed to load OBJ file." << std::endl;
+        return -1;
+    }
+
+    std::vector<unsigned int> textures; // For storing texture IDs
+    if (!loadMTL(textures))       // Load materials from the associated .mtl file
+    {
+        std::cerr << "Failed to load MTL file." << std::endl;
+        return -1;
+    }
+
+    // Now create the GLFW window
     GLFWmonitor *monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
     GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "FLUX Game Engine (Alpha Build 0.1)", monitor, nullptr);
     if (!window)
     {
-        std::cerr << "ERROR: Failed to create the GLFW window" << std::endl;
+        std::cerr << "Failed to create GLFW window" << std::endl;
+        const char *description;
+        glfwGetError(&description);
+        std::cerr << "GLFW Error: " << description << std::endl;
         glfwTerminate();
         return -1;
     }
 
     glfwMakeContextCurrent(window);
+    initGLAD();
     glfwSwapInterval(vSyncEnabled); // V-Sync
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
-    
-    initGLAD();
 
     initImGUI(window, imGUIEnabled);
 
     glEnable(GL_DEPTH_TEST); // Enable depth testing
-    
+
     // Load and compile shaders
     std::string vertexShaderSource = LoadShader(SHADER_DIR + "vertexShader.glsl");
     std::string fragmentShaderSource = LoadShader(SHADER_DIR + "fragmentShader.glsl");
 
     GLuint vertexShader = CompileShader(vertexShaderSource, GL_VERTEX_SHADER);
     GLuint fragmentShader = CompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-
     GLuint shaderProgram = glCreateProgram();
     glAttachShader(shaderProgram, vertexShader);
     glAttachShader(shaderProgram, fragmentShader);
     glLinkProgram(shaderProgram);
-
     glDeleteShader(vertexShader);
     glDeleteShader(fragmentShader);
 
-    // // Set up vertex data and buffers
-    GLuint VBO, VAO;
-    glGenVertexArrays(1, &VAO);
-    glGenBuffers(1, &VBO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBindVertexArray(VAO);
-    glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), vertices.data(), GL_STATIC_DRAW);
-
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *)0);
-    glEnableVertexAttribArray(0);
-
-    // Projection matrix
-    glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-
-    // Main Render Loop
+    Mesh mesh(vertices, indices);
     glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f); // Initial camera position
-    // Mesh model = loadModel("C:/Users/jayxw/Desktop/test/FLUX/models/mazda-rx-7/source/rx7.fbx");
 
+    // Main loop
     while (!glfwWindowShouldClose(window))
     {
+        // Process input
+        // processInput(window);
+
+        // Clear the color and depth buffers
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+        // Use shader program
+        glUseProgram(shaderProgram);
+
+        // Set the view and projection matrices (update this according to your camera)
         glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
-        processInput(window, cameraPos, currentCameraSpeed, static_cast<float>(deltaTime)); // Pass by reference                 // Process input
+        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
+        glm::mat4 model = glm::mat4(1.0f);
+
+        // Set uniforms
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
+        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
+
+        // Draw the mesh
+        mesh.draw(shaderProgram);
+
+        processInput(window, cameraPos, currentCameraSpeed, static_cast<float>(deltaTime));
 
         frameCount++;
         double currentFrame = glfwGetTime();
         deltaTime = static_cast<float>(currentFrame - lastFrame);
         lastFrame = static_cast<float>(currentFrame);
         if (currentFrame - lastTime >= 1.0)
-        { // Update frame rate every second
+        {
             frameRate = frameCount / static_cast<float>((currentFrame - lastTime));
             lastTime = currentFrame;
             frameCount = 0;
         }
 
-        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed, frameRate, cameraSpeed, deltaTime, imGUIEnabled); // Pass camera position
-        glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-        glUseProgram(shaderProgram);
-
-        
-
-        // Set the uniform for projection and view matrices
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(glm::mat4(1.0f))); // Identity model matrix
-
-        // model.draw(); 
-
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6); // Draw the triangles
+        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed, frameRate, cameraSpeed, deltaTime, imGUIEnabled);
         renderImGUI(imGUIEnabled);
+
+        // Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    // Clean up
     cleanUpImGUI(imGUIEnabled);
-    glDeleteVertexArrays(1, &VAO);
-    glDeleteBuffers(1, &VBO);
+    // Cleanup resources
     glDeleteProgram(shaderProgram);
+    glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }

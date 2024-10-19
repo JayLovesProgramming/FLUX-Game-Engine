@@ -14,6 +14,9 @@ set(GLM_INCLUDE_DIR "C:/glm")
 set(ASSIMP_INCLUDE_DIR "C:/Program Files/Assimp/include")
 set(ASSIMP_LIBRARY_DIR "C:/Program Files/Assimp/lib/x64")
 
+set(STB_LIBRARY_DIR "C:/stb")
+
+
 set(IMGUI_INCLUDE_DIR "C:/imgui")
 set(IMGUI_SRC
     "C:/imgui/imgui.cpp"
@@ -25,7 +28,8 @@ set(IMGUI_SRC
     "C:/imgui/imgui_impl_opengl3.cpp"
 )
 
-include_directories(${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR} "src")
+    
+include_directories(${STB_LIBRARY_DIR} ${ASSIMP_INCLUDE_DIR}  ${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR}  ${GLM_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR} "src")
 
 link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR})
 
@@ -62,4 +66,4 @@ add_executable(${PROJECT_NAME}
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")  # Use /MD for Release, /MDd for Debug
 
-target_link_libraries(${PROJECT_NAME} glfw3 opengl32 assimp-vc143-mt)
+target_link_libraries(${PROJECT_NAME} assimp-vc143-mt glfw3 opengl32 )
