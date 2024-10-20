@@ -14,7 +14,6 @@
 #include "Shader/Loader/ShaderLoader.h"
 #include "Input/Mouse/MouseInput.h"
 #include "Input/Keyboard/ProcessInput.h"
-// #include "Input/Gamepad/ControllerInput.h"
 #include "Utils/Paths/ShaderPaths.h"
 #include "Utils/FrameBufferSize/FrameBufferSizeCallback.h"
 #include "Viewport/Camera/Camera.h"
@@ -27,12 +26,11 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include <stb_image.h>
 
-// Initialize variables for frame rate calculation
 static double lastTime = glfwGetTime();
 static int frameCount = 0;
 static float frameRate = 0.0f;
-float deltaTime = 0.0f; // Time between current frame and last frame
-float lastFrame = 0.0f; // Time of the last frame
+float deltaTime = 0.0f;
+float lastFrame = 0.0f;
 
 struct Mesh
 {
@@ -79,131 +77,61 @@ struct Mesh
     }
 };
 
-// Function to load an OBJ file and its associated MTL file
-bool loadOBJ(const std::string &path, std::vector<float> &vertices, std::vector<unsigned int> &indices, std::string &mtlFileName)
+// Function to load GLTF model using Assimp
+bool loadGLTF(const std::string &path, std::vector<float> &vertices, std::vector<unsigned int> &indices)
 {
-    std::cout << "Loading object: " << path << std::endl;
-    std::ifstream file(path);
-    if (!file.is_open())
+    std::cout << "Loading GLTF model: " << path << std::endl;
+
+    Assimp::Importer importer;
+    const aiScene* scene = importer.ReadFile(path, aiProcess_Triangulate | aiProcess_FlipUVs);
+
+    if (!scene || scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
     {
-        std::cerr << "Could not open the file: " << path << std::endl;
+        std::cerr << "ERROR::ASSIMP::" << importer.GetErrorString() << std::endl;
         return false;
     }
 
-    std::vector<float> temp_vertices;
-    std::vector<unsigned int> temp_indices;
+    aiMesh* mesh = scene->mMeshes[0]; // Assuming only one mesh for simplicity
 
-    std::string line;
-    while (std::getline(file, line))
+    // Process vertices
+    for (unsigned int i = 0; i < mesh->mNumVertices; i++)
     {
-        std::istringstream s(line);
-        std::string prefix;
-        s >> prefix;
+        // Position
+        vertices.push_back(mesh->mVertices[i].x);
+        vertices.push_back(mesh->mVertices[i].y);
+        vertices.push_back(mesh->mVertices[i].z);
 
-        if (prefix == "v") // Vertex
+        // Texture coordinates (assuming existence)
+        if (mesh->mTextureCoords[0])
         {
-            float x, y, z;
-            s >> x >> y >> z;
-            temp_vertices.push_back(x);
-            temp_vertices.push_back(y);
-            temp_vertices.push_back(z);
+            vertices.push_back(mesh->mTextureCoords[0][i].x);
+            vertices.push_back(mesh->mTextureCoords[0][i].y);
         }
-        else if (prefix == "f") // Face
+        else
         {
-            unsigned int index;
-            s >> index; // OBJ indices are 1-based, convert to 0-based
-            temp_indices.push_back(index - 1);
-        }
-        else if (prefix == "mtllib") // Material file
-        {
-            s >> mtlFileName; // Read the material file name
+            vertices.push_back(0.0f);
+            vertices.push_back(0.0f);
         }
     }
 
-    // Move data into the final vectors
-    vertices = std::move(temp_vertices);
-    indices = std::move(temp_indices);
+    // Process indices
+    for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+    {
+        aiFace face = mesh->mFaces[i];
+        for (unsigned int j = 0; j < face.mNumIndices; j++)
+        {
+            indices.push_back(face.mIndices[j]);
+        }
+    }
 
-    std::cout << "Loaded object successfully: "
+    std::cout << "Loaded GLTF model successfully: "
               << path << " with "
               << vertices.size() / 5 << " vertices and " // Each vertex consists of 5 floats (3 for position + 2 for texCoords)
               << indices.size() << " indices." << std::endl;
 
     return true;
 }
-bool loadTexture(const std::string &filePath)
-{
-    int width, height, channels;
-    unsigned char *data = stbi_load(filePath.c_str(), &width, &height, &channels, 0);
 
-    if (!data)
-    {
-        std::cerr << "Failed to load texture: " << filePath << std::endl;
-        return false;
-    }
-
-    glBindTexture(GL_TEXTURE_2D, 0);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-    glGenerateMipmap(GL_TEXTURE_2D);
-
-    stbi_image_free(data);
-    return true;
-}
-// Function to load materials from the .mtl file
-bool loadMTL(std::vector<GLuint> &textures)
-{
-    std::string path = "C:/Users/jayxw/Desktop/test/FLUX/models/bayard-station-valve-house/source/model/model.mtl";
-    std::cout << "Loading material: " << path << std::endl;
-
-    std::ifstream file(path);
-    if (!file.is_open())
-    {
-        std::cerr << "Could not open the file: " << path << std::endl;
-        return false;
-    }
-
-    std::string line;
-    std::string currentTextureName;
-
-    while (std::getline(file, line))
-    {
-        std::istringstream s(line);
-        std::string prefix;
-        s >> prefix;
-
-        if (prefix == "newmtl") // New material
-        {
-            s >> currentTextureName;
-        }
-        else if (prefix == "map_Kd") // Diffuse texture map
-        {
-            std::string texturePath;
-            s >> texturePath;
-
-            // unsigned int textureID;
-
-            // GLenum error = glGetError();
-            // if (error != GL_NO_ERROR)
-            // {
-            //     std::cerr << "OpenGL Error: " << error << std::endl;
-            // }
-
-            // glGenTextures(1, &textureID);
-            // // glBindTexture(GL_TEXTURE_3D, textureID);
-
-            // // // Load the texture using the helper function
-            // if (!loadTexture(texturePath, textureID))
-            // {
-            //     return false; // Exit if loading failed
-            // }
-
-            // textures.push_back(textureID); // Store the texture ID for use
-            std::cout << "Loaded texture: " << texturePath << " for material: " << currentTextureName << std::endl;
-        }
-    }
-
-    return true;
-}
 
 // Vertex data (coordinates and texture coordinates)
 const std::array<float, 30> vertices = {
@@ -215,7 +143,36 @@ const std::array<float, 30> vertices = {
     0.5f, 0.5f, 0.0f, 1.0f, 1.0f,   // Top-right
     -0.5f, 0.5f, 0.0f, 0.0f, 1.0f   // Top-left
 };
+// Function to link compiled shaders into a program
+GLuint LinkShaderProgram(GLuint vertexShader, GLuint fragmentShader)
+{
+    // Create a shader program
+    GLuint shaderProgram = glCreateProgram();
 
+    // Attach vertex and fragment shaders
+    glAttachShader(shaderProgram, vertexShader);
+    glAttachShader(shaderProgram, fragmentShader);
+
+    // Link the shaders into a program
+    glLinkProgram(shaderProgram);
+
+    // Check for linking errors
+    GLint success;
+    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
+    if (!success)
+    {
+        char infoLog[512];
+        glGetProgramInfoLog(shaderProgram, 512, nullptr, infoLog);
+        std::cerr << "ERROR::SHADER::PROGRAM::LINKING_FAILED/n" << infoLog << std::endl;
+        return 0;
+    }
+
+    // Cleanup: delete shaders as they are now linked into the program
+    glDeleteShader(vertexShader);
+    glDeleteShader(fragmentShader);
+
+    return shaderProgram;
+}
 int initGLAD()
 {
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
@@ -229,33 +186,21 @@ int initGLAD()
 
 int main()
 {
-    // Initialize GLFW
     assert(glfwInit());
 
-    // Set GLFW Window Hints
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-    // Load the model and textures
     std::vector<float> vertices;
     std::vector<unsigned int> indices;
-    std::string mtlFileName;
 
-    if (!loadOBJ("C:/Users/jayxw/Desktop/test/FLUX/models/bayard-station-valve-house/source/model/model.obj", vertices, indices, mtlFileName))
+    if (!loadGLTF("C:/Users/jayxw/Desktop/test/FLUX/models/haunted_house/scene.gltf", vertices, indices))
     {
-        std::cerr << "Failed to load OBJ file." << std::endl;
+        std::cerr << "Failed to load GLTF file." << std::endl;
         return -1;
     }
 
-    std::vector<unsigned int> textures; // For storing texture IDs
-    if (!loadMTL(textures))       // Load materials from the associated .mtl file
-    {
-        std::cerr << "Failed to load MTL file." << std::endl;
-        return -1;
-    }
-
-    // Now create the GLFW window
     GLFWmonitor *monitor = fullscreen ? glfwGetPrimaryMonitor() : nullptr;
     GLFWwindow *window = glfwCreateWindow(WIDTH, HEIGHT, "FLUX Game Engine (Alpha Build 0.1)", monitor, nullptr);
     if (!window)
@@ -270,81 +215,41 @@ int main()
 
     glfwMakeContextCurrent(window);
     initGLAD();
-    glfwSwapInterval(vSyncEnabled); // V-Sync
+    glfwSwapInterval(vSyncEnabled);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, mouse_callback);
 
     initImGUI(window, imGUIEnabled);
 
-    glEnable(GL_DEPTH_TEST); // Enable depth testing
+    glEnable(GL_DEPTH_TEST);
 
-    // Load and compile shaders
     std::string vertexShaderSource = LoadShader(SHADER_DIR + "vertexShader.glsl");
     std::string fragmentShaderSource = LoadShader(SHADER_DIR + "fragmentShader.glsl");
 
     GLuint vertexShader = CompileShader(vertexShaderSource, GL_VERTEX_SHADER);
     GLuint fragmentShader = CompileShader(fragmentShaderSource, GL_FRAGMENT_SHADER);
-    GLuint shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
+    GLuint shaderProgram = LinkShaderProgram(vertexShader, fragmentShader);
 
-    Mesh mesh(vertices, indices);
-    glm::vec3 cameraPos = glm::vec3(0.0f, 0.0f, 3.0f); // Initial camera position
+    glUseProgram(shaderProgram);
 
-    // Main loop
+    Mesh model(vertices, indices);
+
+    // Rendering loop
     while (!glfwWindowShouldClose(window))
     {
-        // Process input
-        // processInput(window);
+        float currentFrame = glfwGetTime();
+        deltaTime = currentFrame - lastFrame;
+        lastFrame = currentFrame;
 
-        // Clear the color and depth buffers
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // Use shader program
-        glUseProgram(shaderProgram);
+        model.draw(shaderProgram);
 
-        // Set the view and projection matrices (update this according to your camera)
-        glm::mat4 view = glm::lookAt(cameraPos, cameraPos + getCameraFront(), glm::vec3(0.0f, 1.0f, 0.0f));
-        glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)WIDTH / (float)HEIGHT, 0.1f, 100.0f);
-        glm::mat4 model = glm::mat4(1.0f);
-
-        // Set uniforms
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "view"), 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "projection"), 1, GL_FALSE, glm::value_ptr(projection));
-        glUniformMatrix4fv(glGetUniformLocation(shaderProgram, "model"), 1, GL_FALSE, glm::value_ptr(model));
-
-        // Draw the mesh
-        mesh.draw(shaderProgram);
-
-        processInput(window, cameraPos, currentCameraSpeed, static_cast<float>(deltaTime));
-
-        frameCount++;
-        double currentFrame = glfwGetTime();
-        deltaTime = static_cast<float>(currentFrame - lastFrame);
-        lastFrame = static_cast<float>(currentFrame);
-        if (currentFrame - lastTime >= 1.0)
-        {
-            frameRate = frameCount / static_cast<float>((currentFrame - lastTime));
-            lastTime = currentFrame;
-            frameCount = 0;
-        }
-
-        dearImGuiBaby({cameraPos.x, cameraPos.y, cameraPos.z}, currentCameraSpeed, frameRate, cameraSpeed, deltaTime, imGUIEnabled);
-        renderImGUI(imGUIEnabled);
-
-        // Swap buffers
         glfwSwapBuffers(window);
         glfwPollEvents();
     }
 
-    cleanUpImGUI(imGUIEnabled);
-    // Cleanup resources
-    glDeleteProgram(shaderProgram);
-    glfwDestroyWindow(window);
     glfwTerminate();
     return 0;
 }
