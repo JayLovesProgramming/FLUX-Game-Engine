@@ -30,12 +30,7 @@ set(IMGUI_SRC
     "C:/imgui/imgui_impl_opengl3.cpp"
 )
 
-<<<<<<< Updated upstream
-    
-include_directories(${STB_LIBRARY_DIR} ${ASSIMP_INCLUDE_DIR}  ${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR}  ${GLM_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR} "src")
-=======
 include_directories(${GLFW_INCLUDE_DIR} ${STB_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR} "src")
->>>>>>> Stashed changes
 
 link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR})
 
