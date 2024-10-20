@@ -65,7 +65,23 @@
         "unordered_set": "cpp",
         "xhash": "cpp",
         "fstream": "cpp",
+<<<<<<< Updated upstream
         "functional": "cpp",
         "unordered_map": "cpp"
+=======
+        "chrono": "cpp",
+        "ranges": "cpp",
+        "any": "cpp",
+        "codecvt": "cpp",
+        "filesystem": "cpp",
+        "forward_list": "cpp",
+        "functional": "cpp",
+        "iomanip": "cpp",
+        "numeric": "cpp",
+        "ratio": "cpp",
+        "unordered_map": "cpp",
+        "valarray": "cpp",
+        "cerrno": "cpp"
+>>>>>>> Stashed changes
     }
 }

@@ -11,6 +11,8 @@ set(GLAD_INCLUDE_DIR "C:/glad/include")
 
 set(GLM_INCLUDE_DIR "C:/glm")
 
+set(STB_INCLUDE_DIR "C:/stb")
+
 set(ASSIMP_INCLUDE_DIR "C:/Program Files/Assimp/include")
 set(ASSIMP_LIBRARY_DIR "C:/Program Files/Assimp/lib/x64")
 
@@ -28,8 +30,12 @@ set(IMGUI_SRC
     "C:/imgui/imgui_impl_opengl3.cpp"
 )
 
+<<<<<<< Updated upstream
     
 include_directories(${STB_LIBRARY_DIR} ${ASSIMP_INCLUDE_DIR}  ${GLFW_INCLUDE_DIR} ${GLAD_INCLUDE_DIR}  ${GLM_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR} "src")
+=======
+include_directories(${GLFW_INCLUDE_DIR} ${STB_INCLUDE_DIR} ${GLAD_INCLUDE_DIR} ${GLM_INCLUDE_DIR} ${ASSIMP_INCLUDE_DIR} ${IMGUI_INCLUDE_DIR} "src")
+>>>>>>> Stashed changes
 
 link_directories(${GLFW_LIBRARY_DIR} ${ASSIMP_LIBRARY_DIR})
 
@@ -50,18 +56,25 @@ file(GLOB_RECURSE CONFIG_SOURCES src/Config/*.cpp)
 # /GUI
 file(GLOB_RECURSE GUI_SOURCES src/GUI/*.cpp)
 
+
+file(GLOB_RECURSE NEW_SOURCES src/Model/*.cpp)
+
+
 add_executable(${PROJECT_NAME}
     src/main.cpp
-    ${UTILS_SOURCES}
-    ${SHADER_SOURCES}
+    src/stb.cpp
+    # ${UTILS_SOURCES}
+    # ${SHADER_SOURCES}
     ${GLAD_SRC}
-    ${INPUT_KEYBOARD_SOURCES}
-    ${INPUT_MOUSE_SOURCES}
-    ${INPUT_GAMEPAD_SOURCES}
-    ${VIEWPORT_SOURCES}
-    ${CONFIG_SOURCES}
-    ${GUI_SOURCES}
-    ${IMGUI_SRC}  # Include ImGui sources
+    # ${INPUT_KEYBOARD_SOURCES}
+    # ${INPUT_MOUSE_SOURCES}
+    # ${INPUT_GAMEPAD_SOURCES}
+    # ${VIEWPORT_SOURCES}
+    # ${CONFIG_SOURCES}
+    # ${GUI_SOURCES}
+
+    ${NEW_SOURCES}
+    # ${IMGUI_SRC}  # Include ImGui sources
 )
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /MDd")  # Use /MD for Release, /MDd for Debug
